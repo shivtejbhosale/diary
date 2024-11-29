@@ -1,0 +1,126 @@
+#include <stdio.h>
+#include <string.h>
+
+// Function Declarations
+void view_diary();
+void add_record();
+void delete_record();
+void edit_record();
+
+// Global variable declarations
+int set_record = 0; 
+char record_entry[30][5][30]; // Array to store records
+
+int main() {
+    int choice;
+    char cont;
+
+    do {
+        // Menu for operations
+        printf("\n1. View Department Diary");
+        printf("\n2. Add Record to Department Diary");
+        printf("\n3. Delete Department Diary Records");
+        printf("\n4. Edit Department Diary");
+        printf("\n5. Exit");
+        printf("\nEnter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: view_diary(); break;
+            case 2: add_record(); break;
+            case 3: delete_record(); break;
+            case 4: edit_record(); break;
+            case 5: printf("Exiting...\n"); return 0;
+            default: printf("\nInvalid input. Please try again.\n");
+        }
+
+        printf("Continue? [Y/N]: ");
+        scanf(" %c", &cont); // Space before %c to consume any leftover newline characters
+
+    } while (cont == 'y' || cont == 'Y');
+
+    return 0;
+}
+
+void view_diary() {
+    printf("\nSr.No\tName\tAddress\t\tDuration\tDate\t\tTime\n");
+    printf("---------------------------------------------------------------\n");
+    for (int j = 0; j < set_record; j++) {
+        printf("%d\t", j + 1);
+        for (int k = 0; k < 5; k++) {
+            printf("%s\t", record_entry[j][k]);
+        }
+        printf("\n");
+    }
+}
+
+void add_record() {
+    int num_records;
+    printf("Enter number of records to be added: ");
+    scanf("%d", &num_records);
+
+    if (set_record + num_records > 30) {
+        printf("Error: Exceeding record limit of 30.\n");
+        return;
+    }
+
+    for (int i = 0; i < num_records; i++) {
+        printf("\nEnter details for record %d:\n", set_record + 1);
+        printf("Name: ");
+        scanf("%s", record_entry[set_record][0]);
+        printf("Address: ");
+        scanf("%s", record_entry[set_record][1]);
+        printf("Duration: ");
+        scanf("%s", record_entry[set_record][2]);
+        printf("Date: ");
+        scanf("%s", record_entry[set_record][3]);
+        printf("Time: ");
+        scanf("%s", record_entry[set_record][4]);
+
+        set_record++;
+    }
+}
+
+void delete_record() {
+    int record_no;
+    printf("Enter record number to delete: ");
+    scanf("%d", &record_no);
+
+    if (record_no < 1 || record_no > set_record) {
+        printf("Error: Invalid record number.\n");
+        return;
+    }
+
+    for (int i = record_no - 1; i < set_record - 1; i++) {
+        for (int j = 0; j < 5; j++) {
+            strcpy(record_entry[i][j], record_entry[i + 1][j]);
+        }
+    }
+
+    set_record--;
+    printf("Record deleted successfully.\n");
+}
+
+void edit_record() {
+    int record_no, field_no;
+    printf("Enter record number to edit: ");
+    scanf("%d", &record_no);
+
+    if (record_no < 1 || record_no > set_record) {
+        printf("Error: Invalid record number.\n");
+        return;
+    }
+
+    printf("1. Name\n2. Address\n3. Duration\n4. Date\n5. Time\n");
+    printf("Enter field number to edit: ");
+    scanf("%d", &field_no);
+
+    if (field_no < 1 || field_no > 5) {
+        printf("Error: Invalid field number.\n");
+        return;
+    }
+
+    printf("Enter new value: ");
+    scanf("%s", record_entry[record_no - 1][field_no - 1]);
+    printf("Record updated successfully.\n");
+}
